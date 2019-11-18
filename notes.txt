@@ -1,0 +1,26 @@
+stored in /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
+VirtualBox->Preferences->Default Machine Folder = /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
+
+test5:
+type: Linux
+Version: Debian (64-bit)
+Memory size: 4096MB => maximum size to make the vm faster
+Create a virtual Hard Disk	-> fixed size
+				VDI : VirtualBox Disk Image
+				file location /sgoinfre/goinfre/Perso/manki/VirtualBox VMs/test2.0.vdi
+8.00GB
+Debian archive mirror: ftp.fr.debian.org
+Shared Clipboard: Bi-derectional
+Drag and drop : Bi directional 
+System->Floppy-> deselectioner
+Processor : 4CPU
+Storage->Optical Drive (in Attributes) => y mettre le path de l'ISO
+Network->Adapter -> a modifoer plus tard pour la partie web / ssh ... pour acceder en ssh a la VM
+Shared Folder: creer des dossier partage entre la VM et ma session
+
+
+commands:
+df -h	-> Fournit la quantité d'espace occupé des systèmes de
+       fichiers.
+su - 	-> to become root
+
