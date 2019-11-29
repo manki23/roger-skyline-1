@@ -1,7 +1,7 @@
 stored in /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
 VirtualBox->Preferences->Default Machine Folder = /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
 
-test5:
+					test5:
 type: Linux
 Version: Debian (64-bit)
 Memory size: 4096MB => maximum size to make the vm faster
@@ -24,3 +24,72 @@ df -h	-> Fournit la quantité d'espace occupé des systèmes de
        fichiers.
 su - 	-> to become root
 
+users:
+id : manki
+password : manki
+
+pour le root : mdp == 1234
+
+Identifiez le disque et la partition à redimensionner : lsblk -f
+--> sda1
+Démontez la partition : umount /dev/sda1
+Ouvrez fdisk à partir du disque identifié précédemment : sudo fdisk /dev/sda1
+Identifiez la partition à redimensionner en affichant la table des partitions avec p
+
+https://lecrabeinfo.net/redimensionner-agrandir-reduire-une-partition-sur-linux.html
+
+Install Dependencies (as root):
+apt-get update -y && apt-get upgrade -y
+apt-get install sudo vim ufw portsentry fail2ban apache2 mailutils -y
+
+portsentry ne prends aucunes mesures par defaut contre les attaquants potentiels.
+Il se contente de dupliquer les messages dans /var/log/syslog => pour modifier ce comportement
+veuillez modifier /etc/portsentry/portsentry.conf
+Vous devriez egalement verifier :
+/etc/default/portsentry (options de demarrage) et
+/etc/portsentry/portsentry.ignore.static (hotes/interfaces a ignorer)
+Pour davantage de details, consulter les pages de manuel portsentry(8) et
+portsentry.conf(5).
+
+apt-cache show nom_du_paquet => pour vérifier que tu possède bien un paquet
+apt-get install nom_du_paquet => pour l'installer
+
+/etc/profile commentee pour que le PATH soit toujours avec /usr/sbin
+(et pas avec /usr/local/games)
+
+/etc/sudoers modifie via la commande visudo :
+manki     ALL=(ALL:ALL) NOPASSWD:ALL
+ajoute apres root dans user privilege specification
+
+Setup a static IP:
+Network -> adapter1 -> Bridged Adapter
+First, we have to edit the file /etc/network/interfaces and setup our primary network
+auto enp0s3 added and the 2 last lines commented
+
+Now we have to configure this network with a static ip, to do that properly, we will create a file named enp0s3 in the following directory etc/network/interfaces.d/
+cat /etc/network/interfaces.d/enp0s3
+Output:
+iface enp0s3 inet static
+      address 10.11.200.247
+      netmask 255.255.255.252
+      gateway 10.11.254.254
+
+You can now restart the network service to make changes effective: ==> sudo service networking restart <==
+and check the result with: ip addr
+
+Change SSH default Port:
+edit the sshd configuration file : sudo vim /etc/ssh/sshd_config
+
+Edit the line 13 which states 'Port 22'. But before doing so, you'll want to read the note below. Choose an appropriate port, also making sure it not currently used on the system.
+Port 7777 (penser a bien decommenter)
+#mettre 'PermitRootLogin no' et decommenter
+decommenter :
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+
+Note: The Internet Assigned Numbers Authority (IANA) is responsible for the global coordination of the DNS Root, IP addressing, and other Internet protocol resources. It is good practice to follow their port assignment guidelines. Having said that, port numbers are divided into three ranges: Well Known Ports, Registered Ports, and Dynamic and/or Private Ports. The Well Known Ports are those from 0 through 1023 and SHOULD NOT be used. Registered Ports are those from 1024 through 49151 should also be avoided too. Dynamic and/or Private Ports are those from 49152 through 65535 and can be used. Though nothing is stopping you from using reserved port numbers, our suggestion may help avoid technical issues with port allocation in the future.
+
+We can now login with ssh : ssh manki@10.11.200.247 -p 7777
+
+==> la connection ssh ne fonctionne pas j'ai change plusieurs fois le port mais je pense que le probleme vien du choix de l'adresse ip, voir si il faut que je recupere l'addresse ip fournit par dhcp (qui est propre au poste sur lequel je travaille) ou si il existe une facon plus generique de faire.
