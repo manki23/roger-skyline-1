@@ -1,13 +1,18 @@
+IMPORTANT LINKS:
+https://github.com/Kaiiim/roger-skyline1/tree/master/files
+https://github.com/gde-pass/roger-skyline-1
+https://lecrabeinfo.net/redimensionner-agrandir-reduire-une-partition-sur-linux.html
+
 stored in /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
 VirtualBox->Preferences->Default Machine Folder = /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
 
-					test5:
+					test10:
 type: Linux
 Version: Debian (64-bit)
 Memory size: 4096MB => maximum size to make the vm faster
 Create a virtual Hard Disk	-> fixed size
 				VDI : VirtualBox Disk Image
-				file location /sgoinfre/goinfre/Perso/manki/VirtualBox VMs/test2.0.vdi
+				file location /sgoinfre/goinfre/Perso/manki/VirtualBox VMs/test10.0.vdi
 8.00GB
 Debian archive mirror: ftp.fr.debian.org
 Shared Clipboard: Bi-derectional
@@ -15,7 +20,7 @@ Drag and drop : Bi directional
 System->Floppy-> deselectioner
 Processor : 4CPU
 Storage->Optical Drive (in Attributes) => y mettre le path de l'ISO
-Network->Adapter -> a modifoer plus tard pour la partie web / ssh ... pour acceder en ssh a la VM
+Network->Adapter -> bridge adapter
 Shared Folder: creer des dossier partage entre la VM et ma session
 
 
@@ -63,6 +68,7 @@ ajoute apres root dans user privilege specification
 
 Setup a static IP:
 Network -> adapter1 -> Bridged Adapter
+get the ip adresse before modifying the interfaces file /!\ => inet 10.13.0.134/16 brd 10.13.255.255
 First, we have to edit the file /etc/network/interfaces and setup our primary network
 auto enp0s3 added and the 2 last lines commented
 
@@ -93,3 +99,6 @@ Note: The Internet Assigned Numbers Authority (IANA) is responsible for the glob
 We can now login with ssh : ssh manki@10.11.200.247 -p 7777
 
 ==> la connection ssh ne fonctionne pas j'ai change plusieurs fois le port mais je pense que le probleme vien du choix de l'adresse ip, voir si il faut que je recupere l'addresse ip fournit par dhcp (qui est propre au poste sur lequel je travaille) ou si il existe une facon plus generique de faire.
+
+TEST11:
+redo same old same old
