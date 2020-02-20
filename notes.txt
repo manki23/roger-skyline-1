@@ -102,3 +102,66 @@ We can now login with ssh : ssh manki@10.11.200.247 -p 7777
 
 TEST11:
 redo same old same old
+
+###################### Feb, 17th 2020 ########################
+######################### TEST12: ##################################
+New
+name: TEST12
+Machine folder: /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
+Type: Linux
+Version: Debian (64-bits)
+
+Memory size 4096MB
+
+Create a virtul hard disk now
+
+VDI (Virtual Hard Disk Image)
+
+Fixed size
+
+8.00GB
+
+12 min d'attente => do not start the VM before changing the settings:
+
+		Settings
+generals:
+	Shared Clipboard: Bi-derectional
+	Drag and drop : Bi directional 
+System:
+	System->Floppy-> deselectioner
+	Processor : 4CPU
+	Storage->Optical Drive (in Attributes) => y mettre le path de l'ISO
+	Network->Adapter 1-> attached to: Bridge Adapter
+	Shared Folder: creer des dossier partage entre la VM et ma session
+
+START the VM
+Graphical Install
+Select a language : French
+Situation Geographique : France
+clavier : Etats-Unis
+Nom de machine : test12
+Domaine : empty
+Creer les utilisateurs et choisir les mot de passe :
+mdp root : 1234
+nom complet du nouvel utilisateur : Myriam
+id user : manki
+mdp user : manki
+
+Partitionnement assiste->manuel->SCSI2(...)->oui
+set la bone taille des disques de partitionnement ()
+
+Analyser des cd -> non
+France
+Debian archive mirror: ftp.fr.debian.org
+leave empty
+Parrticiper a l'etude, non
+Selection des logiciels :
+	- serveur ssh
+	- utilitaires usuels du systeme
+Installer GRUB : oui
+dans /dev/sta...
+	fin d'installation du systeme
+
+test12login : manki
+Password: manki
+
