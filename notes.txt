@@ -1,160 +1,66 @@
-IMPORTANT LINKS:
-https://github.com/Kaiiim/roger-skyline1/tree/master/files
-https://github.com/gde-pass/roger-skyline-1
-https://lecrabeinfo.net/redimensionner-agrandir-reduire-une-partition-sur-linux.html
-
-stored in /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
-VirtualBox->Preferences->Default Machine Folder = /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
-
-					test10:
-type: Linux
-Version: Debian (64-bit)
-Memory size: 4096MB => maximum size to make the vm faster
-Create a virtual Hard Disk	-> fixed size
-				VDI : VirtualBox Disk Image
-				file location /sgoinfre/goinfre/Perso/manki/VirtualBox VMs/test10.0.vdi
-8.00GB
-Debian archive mirror: ftp.fr.debian.org
-Shared Clipboard: Bi-derectional
-Drag and drop : Bi directional 
-System->Floppy-> deselectioner
-Processor : 4CPU
-Storage->Optical Drive (in Attributes) => y mettre le path de l'ISO
-Network->Adapter -> bridge adapter
-Shared Folder: creer des dossier partage entre la VM et ma session
-
-
-commands:
-df -h	-> Fournit la quantité d'espace occupé des systèmes de
-       fichiers.
-su - 	-> to become root
-
-users:
-id : manki
-password : manki
-
-pour le root : mdp == 1234
-
-Identifiez le disque et la partition à redimensionner : lsblk -f
---> sda1
-Démontez la partition : umount /dev/sda1
-Ouvrez fdisk à partir du disque identifié précédemment : sudo fdisk /dev/sda1
-Identifiez la partition à redimensionner en affichant la table des partitions avec p
-
-https://lecrabeinfo.net/redimensionner-agrandir-reduire-une-partition-sur-linux.html
-
-Install Dependencies (as root):
-apt-get update -y && apt-get upgrade -y
-apt-get install sudo vim ufw portsentry fail2ban apache2 mailutils -y
-
-portsentry ne prends aucunes mesures par defaut contre les attaquants potentiels.
-Il se contente de dupliquer les messages dans /var/log/syslog => pour modifier ce comportement
-veuillez modifier /etc/portsentry/portsentry.conf
-Vous devriez egalement verifier :
-/etc/default/portsentry (options de demarrage) et
-/etc/portsentry/portsentry.ignore.static (hotes/interfaces a ignorer)
-Pour davantage de details, consulter les pages de manuel portsentry(8) et
-portsentry.conf(5).
-
-apt-cache show nom_du_paquet => pour vérifier que tu possède bien un paquet
-apt-get install nom_du_paquet => pour l'installer
-
-/etc/profile commentee pour que le PATH soit toujours avec /usr/sbin
-(et pas avec /usr/local/games)
-
-/etc/sudoers modifie via la commande visudo :
-manki     ALL=(ALL:ALL) NOPASSWD:ALL
-ajoute apres root dans user privilege specification
-
-Setup a static IP:
-Network -> adapter1 -> Bridged Adapter
-get the ip adresse before modifying the interfaces file /!\ => inet 10.13.0.134/16 brd 10.13.255.255
-First, we have to edit the file /etc/network/interfaces and setup our primary network
-auto enp0s3 added and the 2 last lines commented
-
-Now we have to configure this network with a static ip, to do that properly, we will create a file named enp0s3 in the following directory etc/network/interfaces.d/
-cat /etc/network/interfaces.d/enp0s3
-Output:
-iface enp0s3 inet static
-      address 10.11.200.247
-      netmask 255.255.255.252
-      gateway 10.11.254.254
-
-You can now restart the network service to make changes effective: ==> sudo service networking restart <==
-and check the result with: ip addr
-
-Change SSH default Port:
-edit the sshd configuration file : sudo vim /etc/ssh/sshd_config
-
-Edit the line 13 which states 'Port 22'. But before doing so, you'll want to read the note below. Choose an appropriate port, also making sure it not currently used on the system.
-Port 7777 (penser a bien decommenter)
-#mettre 'PermitRootLogin no' et decommenter
-decommenter :
-PubkeyAuthentication yes
-PasswordAuthentication no
-PermitEmptyPasswords no
-
-Note: The Internet Assigned Numbers Authority (IANA) is responsible for the global coordination of the DNS Root, IP addressing, and other Internet protocol resources. It is good practice to follow their port assignment guidelines. Having said that, port numbers are divided into three ranges: Well Known Ports, Registered Ports, and Dynamic and/or Private Ports. The Well Known Ports are those from 0 through 1023 and SHOULD NOT be used. Registered Ports are those from 1024 through 49151 should also be avoided too. Dynamic and/or Private Ports are those from 49152 through 65535 and can be used. Though nothing is stopping you from using reserved port numbers, our suggestion may help avoid technical issues with port allocation in the future.
-
-We can now login with ssh : ssh manki@10.11.200.247 -p 7777
-
-==> la connection ssh ne fonctionne pas j'ai change plusieurs fois le port mais je pense que le probleme vien du choix de l'adresse ip, voir si il faut que je recupere l'addresse ip fournit par dhcp (qui est propre au poste sur lequel je travaille) ou si il existe une facon plus generique de faire.
-
-TEST11:
-redo same old same old
-
-###################### Feb, 17th 2020 ########################
-######################### TEST12: ##################################
+###################### Feb, 20th 2020 ########################
+######################### TEST14: ##################################
+##################### CREER LA VM #################################
 New
-name: TEST12
+name: TEST14
 Machine folder: /sgoinfre/goinfre/Perso/manki/VirtualBox VMs
 Type: Linux
 Version: Debian (64-bits)
 
 Memory size 4096MB
 
-Create a virtul hard disk now
+Create a virtual hard disk now
 
 VDI (Virtual Hard Disk Image)
 
 Fixed size
 
-8.00GB
+8.00GB (I didn't change the path of the .vdi file)
 
-12 min d'attente => do not start the VM before changing the settings:
+2 min wait => once finished, do not start the VM before changing the settings:
 
 		Settings
 generals:
 	Shared Clipboard: Bi-derectional
-	Drag and drop : Bi directional 
+	Drag and drop : Bi directional
 System:
-	System->Floppy-> deselectioner
+	System->Floppy-> uncheck
 	Processor : 4CPU
-	Storage->Optical Drive (in Attributes) => y mettre le path de l'ISO
+	Storage => in Storage Devices click on empty, then in Attributes, click
+on the blue circle next to optical drive, and choose debian-10.1.0-amd64-netinst.iso
 	Network->Adapter 1-> attached to: Bridge Adapter
 	Shared Folder: creer des dossier partage entre la VM et ma session
 
-START the VM
-Graphical Install
+START the VM and click on Install
 Select a language : French
 Situation Geographique : France
 clavier : Etats-Unis
-Nom de machine : test12
-Domaine : empty
+Nom de machine : test14
+Domaine : <empty>
 Creer les utilisateurs et choisir les mot de passe :
 mdp root : 1234
 nom complet du nouvel utilisateur : Myriam
 id user : manki
 mdp user : manki
 
-Partitionnement assiste->manuel->SCSI2(...)->oui
-set la bone taille des disques de partitionnement ()
+Partitionnement assiste->manuel :
+	click on SCSI3(0,0,0)(sda)...
+	faut-il creer une nouvelle table des partitions sur ce disque ? oui
+	click on pri/log 8.6 GB Espace Libre => creer une nouvelle partition
+		=> 4.6GB, Primaire, emplacement: Debut, utiliser comme: systeme
+		de fichiers ext2, point de montage /, fin du paramettrage de
+		cette partition
+	click on pri/log 4.0 GB Espace Libre => creer une nouvelle partition
+		=> 4.0GB, Logique,  utiliser comme: espace d'echange swap,
+		fin du paramettrage de cette partition
+	Terminer le Partitionnement et appliquer les changements
+	Faut-il appliquer les changement sur les disques => oui
 
-Analyser des cd -> non
+Analyser un autre cd -> non
 France
 Debian archive mirror: ftp.fr.debian.org
-leave empty
-Parrticiper a l'etude, non
+mandataire http : <leave empty>
+Participer a l'etude, non
 Selection des logiciels :
 	- serveur ssh
 	- utilitaires usuels du systeme
@@ -162,6 +68,119 @@ Installer GRUB : oui
 dans /dev/sta...
 	fin d'installation du systeme
 
-test12login : manki
+test14 login : manki
 Password: manki
+############################### FIN CREATION VM ##############################
 
+############################ PARAMETTRER LA VM ###############################
+
+su (to be super user root)
+	mdp : 1234
+Update:
+	apt-get -y update && apt-get -y upgrade
+
+Install packages:
+	apt-get install -y sudo git apache2 sendmail fail2ban vim
+
+Install folder:
+	cd /root
+	git clone https://github.com/IMBiXx/Roger-Skyline.git /root/roger-skyline
+
+user creation:
+	echo "Adding sudo user... Username ? (default: 'roger')"
+	read Username
+	Username=${Username:-"roger"}
+	sudo adduser $Username
+	sudo adduser $Username sudo
+	sudo vim /etc/sudoers
+		add "$Username     ALL=(ALL:ALL) NOPASSWD:ALL" after root
+
+
+interfaces:
+	cp /etc/network/interfaces /etc/network/interfaces_save
+	rm -f /etc/network/interfaces
+	cp /root/roger-skyline/files/interfaces /etc/network
+	cp /root/roger-skyline/files/enp0s3 /etc/network/interfaces.d/
+	sudo service networking restart
+
+sshd config:
+	cp /etc/ssh/sshd_config /etc/ssh/sshd_config_save
+	rm -rf /etc/ssh/sshd_config
+	cp /root/roger-skyline/files/sshd_config /etc/ssh/
+	mkdir -pv /home/$Username/.ssh
+	cat /root/roger-skyline/files/id_rsa.pub >> /home/$Username/.ssh/authorized_keys
+	/etc/init.d/ssh restart
+
+Firewall:
+	sh /root/roger-skyline/scripts/firewall.sh
+
+DDOS Protection:
+	sh /root/roger-skyline/scripts/ports.sh
+
+making the configuration persistent:
+	apt-get install -y iptables-persistent
+
+mail server:
+	yes 'Y' | sudo sendmailconfig
+
+update script:
+	mkdir /root/scripts
+	cp /root/roger-skyline/scripts/script_log.sh /root/scripts/
+	chmod 755 /root/scripts/script_log.sh
+	chown root /root/scripts/script_log.sh
+
+	echo "0 4 * * wed root /root/scripts/script_log.sh\n" >> /etc/crontab
+	echo "@reboot root /root/scripts/script_log.sh\n" >> /etc/crontab
+
+	echo "0 4 * * wed root /root/scripts/script_log.sh\n" >> /var/spool/cron/crontabs/root
+	echo "@reboot root /root/scripts/script_log.sh\n" >> /var/spool/cron/crontabs/root
+
+crontab script:
+	cp /root/roger-skyline/scripts/script_crontab.sh /root/scripts/
+	cp /root/roger-skyline/files/mail_type.txt /root/scripts/
+	chmod 755 /root/scripts/script_crontab.sh
+	chown root /root/scripts/script_crontab.sh
+	chown root /root/scripts/mail_type.txt
+
+	echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /etc/crontab
+	echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /var/spool/cron/crontabs/root
+
+	cat /etc/crontab > /root/scripts/tmp
+
+web server:
+	systemctl start apache2
+
+virtual host:
+	mkdir -p /var/www/init.login.fr/html
+	chown -R $Username:$Username /var/www/init.login.fr/html
+	chmod -R 775 /var/www/init.login.fr
+
+	cp /root/roger-skyline/files/index.html /var/www/init.login.fr/html/
+	cp -r /root/roger-skyline/files/assets /var/www/init.login.fr/html/
+
+	cp /root/roger-skyline/files/init.login.fr.conf /etc/apache2/sites-available/
+
+	rm /etc/apache2/sites-enabled/000-default.conf
+	ln -s /etc/apache2/sites-available/init.login.fr.conf /etc/apache2/sites-enabled/
+
+ssl certificat:
+	cd /etc/ssl/certs/
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger.crt
+
+	sudo a2enmod ssl
+	sudo service apache2 restart
+
+cleaning:
+	apt-get remove -y git
+	rm -rf /root/roger-skyline/
+	echo "Subject: Install done for $Username." | sudo sendmail -v manki@student.42.fr
+
+############################ FIN DES PARAMETTRAGE ############################
+
+########################### COMMANDES UTILES #################################
+
+sudo fdisk -l => debian disk infos
+
+sudo vim /etc/sudoers : pour configurer les sudo users
+
+sudo vim /etc/network/interfaces => to configure a static IP address.
