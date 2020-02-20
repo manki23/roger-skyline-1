@@ -8,17 +8,16 @@ echo "\n"
 echo "==================================================================\n"
 echo "            installing package..."
 echo "\n"
-apt-get install -y sudo
-apt-get install -y git
-apt-get install -y apache2
-apt-get install -y sendmail
+apt-get install -y sudo git apache2 sendmail
 
 echo "\n"
 echo "==================================================================\n"
 echo "            debian disk infos :"
 echo "\n"
+
 sudo fdisk -l
 sleep 3s
+
 echo "\n"
 echo "==================================================================\n"
 echo "            installing folder..."
@@ -65,6 +64,7 @@ cp /root/roger-skyline-1/files/sshd_config /etc/ssh/
 mkdir -pv /home/$Username/.ssh
 yes '/root/roger-skyline-1/files/id_rsa' | ssh-keygen
 cat /root/roger-skyline-1/files/id_rsa.pub >> /home/$Username/.ssh/authorized_keys
+ssh-copy-id -i /root/roger-skyline-1/files/id_rsa.pub manki@10.11.45.33 -p 3333
 
 /etc/init.d/ssh restart
 sleep 3s
@@ -160,25 +160,25 @@ systemctl start apache2
 echo "done."
 sleep 3s
 
-#echo "\n"
-#echo "==================================================================\n"
-#echo "            VIRTUAL HOST"
-#echo "\n"
+echo "\n"
+echo "==================================================================\n"
+echo "            VIRTUAL HOST"
+echo "\n"
 
-#mkdir -p /var/www/init.login.fr/html
-#chown -R $Username:$Username /var/www/init.login.fr/html
-#chmod -R 775 /var/www/init.login.fr
+mkdir -p /var/www/init.login.fr/html
+chown -R $Username:$Username /var/www/init.login.fr/html
+chmod -R 775 /var/www/init.login.fr
 
-#cp /root/roger-skyline-1/files/index.html /var/www/init.login.fr/html/
-#cp -r /root/roger-skyline-1/files/assets /var/www/init.login.fr/html/
+cp /root/roger-skyline-1/files/index.html /var/www/init.login.fr/html/
+cp -r /root/roger-skyline-1/files/assets /var/www/init.login.fr/html/
 
-#cp /root/roger-skyline-1/files/init.login.fr.conf /etc/apache2/sites-available/
+cp /root/roger-skyline-1/files/init.login.fr.conf /etc/apache2/sites-available/
 
-#rm /etc/apache2/sites-enabled/000-default.conf
-#ln -s /etc/apache2/sites-available/init.login.fr.conf /etc/apache2/sites-enabled/
+rm /etc/apache2/sites-enabled/000-default.conf
+ln -s /etc/apache2/sites-available/init.login.fr.conf /etc/apache2/sites-enabled/
 
-#echo "done."
-#sleep 3s
+echo "done."
+sleep 3s
 
 echo "\n"
 echo "==================================================================\n"

@@ -72,111 +72,6 @@ test14 login : manki
 Password: manki
 ############################### FIN CREATION VM ##############################
 
-############################ PARAMETTRER LA VM ###############################
-
-su (to be super user root)
-	mdp : 1234
-Update:
-	apt-get -y update && apt-get -y upgrade
-
-Install packages:
-	apt-get install -y sudo git apache2 sendmail fail2ban vim
-
-Install folder:
-	cd /root
-	git clone https://github.com/IMBiXx/Roger-Skyline.git /root/roger-skyline
-
-user creation:
-	echo "Adding sudo user... Username ? (default: 'roger')"
-	read Username
-	Username=${Username:-"roger"}
-	sudo adduser $Username
-	sudo adduser $Username sudo
-	sudo vim /etc/sudoers
-		add "$Username     ALL=(ALL:ALL) NOPASSWD:ALL" after root
-
-
-interfaces:
-	cp /etc/network/interfaces /etc/network/interfaces_save
-	rm -f /etc/network/interfaces
-	cp /root/roger-skyline/files/interfaces /etc/network
-	cp /root/roger-skyline/files/enp0s3 /etc/network/interfaces.d/
-	sudo service networking restart
-
-sshd config:
-	cp /etc/ssh/sshd_config /etc/ssh/sshd_config_save
-	rm -rf /etc/ssh/sshd_config
-	cp /root/roger-skyline/files/sshd_config /etc/ssh/
-	mkdir -pv /home/$Username/.ssh
-	cat /root/roger-skyline/files/id_rsa.pub >> /home/$Username/.ssh/authorized_keys
-	/etc/init.d/ssh restart
-
-Firewall:
-	sh /root/roger-skyline/scripts/firewall.sh
-
-DDOS Protection:
-	sh /root/roger-skyline/scripts/ports.sh
-
-making the configuration persistent:
-	apt-get install -y iptables-persistent
-
-mail server:
-	yes 'Y' | sudo sendmailconfig
-
-update script:
-	mkdir /root/scripts
-	cp /root/roger-skyline/scripts/script_log.sh /root/scripts/
-	chmod 755 /root/scripts/script_log.sh
-	chown root /root/scripts/script_log.sh
-
-	echo "0 4 * * wed root /root/scripts/script_log.sh\n" >> /etc/crontab
-	echo "@reboot root /root/scripts/script_log.sh\n" >> /etc/crontab
-
-	echo "0 4 * * wed root /root/scripts/script_log.sh\n" >> /var/spool/cron/crontabs/root
-	echo "@reboot root /root/scripts/script_log.sh\n" >> /var/spool/cron/crontabs/root
-
-crontab script:
-	cp /root/roger-skyline/scripts/script_crontab.sh /root/scripts/
-	cp /root/roger-skyline/files/mail_type.txt /root/scripts/
-	chmod 755 /root/scripts/script_crontab.sh
-	chown root /root/scripts/script_crontab.sh
-	chown root /root/scripts/mail_type.txt
-
-	echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /etc/crontab
-	echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /var/spool/cron/crontabs/root
-
-	cat /etc/crontab > /root/scripts/tmp
-
-web server:
-	systemctl start apache2
-
-virtual host:
-	mkdir -p /var/www/init.login.fr/html
-	chown -R $Username:$Username /var/www/init.login.fr/html
-	chmod -R 775 /var/www/init.login.fr
-
-	cp /root/roger-skyline/files/index.html /var/www/init.login.fr/html/
-	cp -r /root/roger-skyline/files/assets /var/www/init.login.fr/html/
-
-	cp /root/roger-skyline/files/init.login.fr.conf /etc/apache2/sites-available/
-
-	rm /etc/apache2/sites-enabled/000-default.conf
-	ln -s /etc/apache2/sites-available/init.login.fr.conf /etc/apache2/sites-enabled/
-
-ssl certificat:
-	cd /etc/ssl/certs/
-	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger.crt
-
-	sudo a2enmod ssl
-	sudo service apache2 restart
-
-cleaning:
-	apt-get remove -y git
-	rm -rf /root/roger-skyline/
-	echo "Subject: Install done for $Username." | sudo sendmail -v manki@student.42.fr
-
-############################ FIN DES PARAMETTRAGE ############################
-
 ########################### COMMANDES UTILES #################################
 
 sudo fdisk -l => debian disk infos
@@ -184,3 +79,10 @@ sudo fdisk -l => debian disk infos
 sudo vim /etc/sudoers : pour configurer les sudo users
 
 sudo vim /etc/network/interfaces => to configure a static IP address.
+
+	sudo parted
+	unit GB print
+=> verifier la taille des partitions
+
+ip addr #remplace ifconfig
+
