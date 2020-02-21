@@ -143,3 +143,5 @@ supprimer le contenu de vi /var/log/update_script.log
 faire sudo reboot
 verifier dans vi /var/log/update_script.log que l'update a ete faite
 
+verifier le script de modification :
+modifier le timestamp dans /etc/crontab
