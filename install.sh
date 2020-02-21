@@ -20,14 +20,6 @@ sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
-echo "            installing folder..."
-echo "\n"
-
-cd /root
-git clone https://github.com/manki23/roger-skyline-1.git /root/roger-skyline-1
-
-echo "\n"
-echo "==================================================================\n"
 echo "            user creation..."
 echo "\n"
 
@@ -140,7 +132,7 @@ echo "==================================================================\n"
 echo "                  FAIL2BAN CONFIGURATION"
 echo "\n"
 
-sudo apt-get install fail2ban
+yes 'Y' | sudo apt-get install fail2ban
 cp /root/roger-skyline-1/files/jail.local /etc/fail2ban/
 sudo service fail2ban restart
 sudo fail2ban-client status
@@ -231,9 +223,9 @@ echo "            SSL CERTIFICAT"
 echo "\n"
 
 cd /etc/ssl/certs/
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger.crt
+yes 'Y' | openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger.crt
 
-sudo a2enmod ssl
+yes 'Y' | sudo a2enmod ssl
 sudo service apache2 restart
 
 echo "\n"
