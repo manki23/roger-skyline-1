@@ -3,12 +3,14 @@ echo "            updating..."
 echo "\n"
 apt-get -y update
 apt-get -y upgrade
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
 echo "            installing package..."
 echo "\n"
 apt-get install -y sudo git apache2 sendmail
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
@@ -56,6 +58,7 @@ cat /root/roger-skyline-1/files/id_rsa.pub >> /home/$Username/.ssh/authorized_ke
 ssh-copy-id -i /root/roger-skyline-1/files/id_rsa.pub $Username@10.11.42.42 -p 3333
 
 /etc/init.d/ssh restart
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
@@ -132,11 +135,12 @@ echo "==================================================================\n"
 echo "                  FAIL2BAN CONFIGURATION"
 echo "\n"
 
-yes 'Y' | sudo apt-get install fail2ban
+sudo apt-get install fail2ban
 cp /root/roger-skyline-1/files/jail.local /etc/fail2ban/
 sudo service fail2ban restart
 sudo fail2ban-client status
 sleep 3s
+echo "done."
 
 
 echo "\n"
@@ -145,6 +149,7 @@ echo "            making the configuration persistent..."
 echo "\n"
 
 apt-get install -y iptables-persistent
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
@@ -152,6 +157,7 @@ echo "            MAIL SERVER"
 echo "\n"
 
 yes 'Y' | sudo sendmailconfig
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
@@ -181,13 +187,10 @@ cp /root/roger-skyline-1/files/mail_type.txt /root/scripts/
 chmod 755 /root/scripts/script_crontab.sh
 chown root /root/scripts/script_crontab.sh
 chown root /root/scripts/mail_type.txt
-
-echo "done."
-
 echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /etc/crontab
 echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /var/spool/cron/crontabs/root
-
 cat /etc/crontab > /root/scripts/tmp
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
@@ -195,7 +198,6 @@ echo "            WEB SERVER"
 echo "\n"
 
 systemctl start apache2
-
 echo "done."
 
 echo "\n"
@@ -223,10 +225,11 @@ echo "            SSL CERTIFICAT"
 echo "\n"
 
 cd /etc/ssl/certs/
-yes 'Y' | openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger.crt
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger.crt
 
-yes 'Y' | sudo a2enmod ssl
+sudo a2enmod ssl
 sudo service apache2 restart
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
