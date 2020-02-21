@@ -25,7 +25,6 @@ echo "\n"
 
 cd /root
 git clone https://github.com/manki23/roger-skyline-1.git /root/roger-skyline-1
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -37,7 +36,6 @@ read Username
 Username=${Username:-"roger"}
 sudo adduser $Username
 sudo adduser $Username sudo
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -51,7 +49,6 @@ cp /root/roger-skyline-1/files/interfaces /etc/network
 cp /root/roger-skyline-1/files/enp0s3 /etc/network/interfaces.d/
 
 sudo service networking restart
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -64,37 +61,91 @@ cp /root/roger-skyline-1/files/sshd_config /etc/ssh/
 mkdir -pv /home/$Username/.ssh
 yes '/root/roger-skyline-1/files/id_rsa' | ssh-keygen
 cat /root/roger-skyline-1/files/id_rsa.pub >> /home/$Username/.ssh/authorized_keys
-ssh-copy-id -i /root/roger-skyline-1/files/id_rsa.pub manki@10.11.45.33 -p 3333
+ssh-copy-id -i /root/roger-skyline-1/files/id_rsa.pub $Username@10.11.45.33 -p 3333
 
 /etc/init.d/ssh restart
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
 echo "            FIREWALL"
 echo "\n"
 
-sh /root/roger-skyline-1/scripts/firewall.sh
+#Nettoyage des règles existantes
+sudo iptables -t filter -F
+sudo iptables -t filter -X
+# Blocage total
+sudo iptables -t filter -P INPUT DROP
+sudo iptables -t filter -P FORWARD DROP
+sudo iptables -t filter -P OUTPUT DROP
+# Garder les connexions etablies
+sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+# Autoriser loopback
+sudo iptables -t filter -A INPUT -i lo -j ACCEPT
+# Autoriser SSH
+sudo iptables -t filter -A INPUT -p tcp --dport 3333 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p tcp --dport 3333 -j ACCEPT
+# Autoriser HTTP
+sudo iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+# Autoriser HTTPS
+sudo iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+# Autoriser DNS
+sudo iptables -t filter -A INPUT -p tcp --dport 53 -j ACCEPT
+sudo iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p tcp --dport 53 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p udp --dport 53 -j ACCEPT
+# Autoriser SMTP
+sudo iptables -t filter -A OUTPUT -p tcp --dport 25 -j ACCEPT
 echo "done."
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
 echo "            DDOS PROTECTION"
 echo "\n"
 
-sh /root/roger-skyline-1/scripts/ddos.sh
+# Bloque les paquets invalides
+sudo iptables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
+# Bloque les nouveaux paquets qui n'ont pas le flag tcp syn
+sudo iptables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
+# Bloque les valeurs MSS anormal
+sudo iptables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
+# Limite les nouvelles connexions
+sudo iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
+sudo iptables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
+# Limite les nouvelles connexions si un client possede deja 80 connexions
+sudo iptables -A INPUT -p tcp -m connlimit --connlimit-above 80 -j REJECT --reject-with tcp-reset
+# Limite les connections
+sudo iptables -A INPUT -p tcp --dport 80 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+# Protection Synflood
+sudo iptables -A INPUT -p tcp --syn -m limit --limit 2/s --limit-burst 30 -j ACCEPT
+# Protection Pingflood
+sudo iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
 echo "done."
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
-echo "            PORTS SCAN"
+echo "            PORTS SCAN PROTECTION"
 echo "\n"
 
-sh /root/roger-skyline-1/scripts/ports.sh
+# Protection scan de ports
+sudo iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 echo "done."
+
+echo "\n"
+echo "==================================================================\n"
+echo "                  FAIL2BAN CONFIGURATION"
+echo "\n"
+
+sudo apt-get install fail2ban
+cp /root/roger-skyline-1/files/jail.local /etc/fail2ban/
+sudo service fail2ban restart
+sudo fail2ban-client status
 sleep 3s
+
 
 echo "\n"
 echo "==================================================================\n"
@@ -109,7 +160,6 @@ echo "            MAIL SERVER"
 echo "\n"
 
 yes 'Y' | sudo sendmailconfig
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -128,7 +178,6 @@ echo "0 4 * * wed root /root/scripts/script_log.sh\n" >> /var/spool/cron/crontab
 echo "@reboot root /root/scripts/script_log.sh\n" >> /var/spool/cron/crontabs/root
 
 echo "done."
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -142,13 +191,11 @@ chown root /root/scripts/script_crontab.sh
 chown root /root/scripts/mail_type.txt
 
 echo "done."
-sleep 3s
 
 echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /etc/crontab
 echo "0 0 * * * root /root/scripts/script_crontab.sh\n" >> /var/spool/cron/crontabs/root
 
 cat /etc/crontab > /root/scripts/tmp
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -158,7 +205,6 @@ echo "\n"
 systemctl start apache2
 
 echo "done."
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -178,7 +224,6 @@ rm /etc/apache2/sites-enabled/000-default.conf
 ln -s /etc/apache2/sites-available/init.login.fr.conf /etc/apache2/sites-enabled/
 
 echo "done."
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"
@@ -190,7 +235,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout roger.key -out roger
 
 sudo a2enmod ssl
 sudo service apache2 restart
-sleep 3s
 
 echo "\n"
 echo "==================================================================\n"

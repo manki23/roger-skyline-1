@@ -47,11 +47,11 @@ Partitionnement assiste->manuel :
 	click on SCSI3(0,0,0)(sda)...
 	faut-il creer une nouvelle table des partitions sur ce disque ? oui
 	click on pri/log 8.6 GB Espace Libre => creer une nouvelle partition
-		=> 4.6GB, Primaire, emplacement: Debut, utiliser comme: systeme
+		=> 4.5GB, Primaire, emplacement: Debut, utiliser comme: systeme
 		de fichiers ext2, point de montage /, fin du paramettrage de
 		cette partition
 	click on pri/log 4.0 GB Espace Libre => creer une nouvelle partition
-		=> 4.0GB, Logique,  utiliser comme: espace d'echange swap,
+		=> 4.1GB, Logique,  utiliser comme: espace d'echange swap,
 		fin du paramettrage de cette partition
 	Terminer le Partitionnement et appliquer les changements
 	Faut-il appliquer les changement sur les disques => oui
@@ -87,3 +87,30 @@ sudo vim /etc/network/interfaces => to configure a static IP address.
 ip addr #remplace ifconfig
 
 sudo service sshd restart
+
+apt-get -y upgrade
+
+apt list --installed > tmp
+(ou grep " install " /var/log/dpkg.log)
+
+sudo adduser name
+sudo adduser name sudo
+sudo deluser name sudo
+
+list sudo user : getent group sudo
+see all user : cat /etc/passwd ou (cut -d: -f1 /etc/passwd)
+
+service --status-all
+sudo service nomDuService status (sudo service dhcp status)
+
+Choisissez un netmask different que /30, demandez a l'évalué de
+configurer coté host et coté guest une connexion reseau avec ce netmask.
+L'evalué choisira les IP. Si ce n'est pas réussi, ce test est échoué.
+	sudo vi /etc/network/interfaces.d/enp0s3 => changer le netmask et l'IP
+	sudo vi /etc/ssh/sshd_config	=> password authentification yes
+		(pour pouvoir se connecter en ssh)
+					=> changer le port ssh
+	sudo reboot
+
+lister les regles de parefeu (iptables):
+	sudo iptables -L
