@@ -176,6 +176,7 @@ cp /root/roger-skyline-1/files/init.login.fr.conf /etc/apache2/sites-available/
 
 rm /etc/apache2/sites-enabled/000-default.conf
 ln -s /etc/apache2/sites-available/init.login.fr.conf /etc/apache2/sites-enabled/
+#systemctl restart apache2
 
 echo "done."
 sleep 3s

@@ -86,3 +86,4 @@ sudo vim /etc/network/interfaces => to configure a static IP address.
 
 ip addr #remplace ifconfig
 
+sudo service sshd restart

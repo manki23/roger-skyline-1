@@ -1,27 +1,34 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="./home.css" />
+        <title>Sign-in</title>
+    </head>
+    <body>
+        <header>
+			<center><h2>Login</h2></center>
+		</header>
+	<form method="post">
+	<div class="test">
+	 
+  	<div class="input-group">
+  		<label>Username</label>
+  		<input type="text" name="username" >
+  	</div>
 
-<meta content="IE=Edge,chrome=1" http-equiv="X-UA-Compatible">
-<meta content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0" name="viewport">
-<title>Intra Signin  New</title>
-<link rel="stylesheet" media="all" href="assets/style.css">
-</head><body>
+  	<div class="input-group">
+  		<label>Password</label>
+  		<input type="password" name="password">
+  	</div>
 
-
-<div class="login-container">
-	<div class="login-title"><h1 style="color:#e10feb">Valecart's World</h1></div>
-<div class="login-main">
-<form novalidate="novalidate" class="simple_form form-horizontal new_user" id="new_user" action="#" accept-charset="UTF-8" method="post"><div class="form-inputs">
-<div class="input-login login-input-group string optional user_login"><input class="login-control string optional" autofocus="autofocus" placeholder="Login" type="text" value="" name="user[login]" id="user_login"></div>
-<div class="input-login login-input-group password optional user_password"><input class="login-control password optional" placeholder="Password" type="password" name="user[password]" id="user_password"></div>
-</div>
-<div class="form-actions">
-<input class="btn btn-login" data-disable-with="Signing in..." name="commit" type="submit" value="Sign in">
-</div>
-</form>
-  <a class="forgot-password-link" href="#">Forgot or change your password?</a><br>
-  <a class="forgot-password-link" href="#">Read our terms and conditions</a><br>
-</div>
-</div>
+  	<div class="input-group">
+  		<button type="submit" class="btn" name="login_user">Login</button>
+  	</div>
+	
+  	<p id="p">
+  		Not yet a member? <a href="https://i.kym-cdn.com/photos/images/original/000/770/561/0e4.jpg">Too Bad...</a>
+  	</p>
+  </form>
 </body>
 </html>
