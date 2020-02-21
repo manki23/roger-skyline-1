@@ -43,6 +43,7 @@ cp /root/roger-skyline-1/files/interfaces /etc/network
 cp /root/roger-skyline-1/files/enp0s3 /etc/network/interfaces.d/
 
 sudo service networking restart
+echo "done."
 
 echo "\n"
 echo "==================================================================\n"
