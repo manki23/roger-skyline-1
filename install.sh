@@ -61,7 +61,7 @@ cp /root/roger-skyline-1/files/sshd_config /etc/ssh/
 mkdir -pv /home/$Username/.ssh
 yes '/root/roger-skyline-1/files/id_rsa' | ssh-keygen
 cat /root/roger-skyline-1/files/id_rsa.pub >> /home/$Username/.ssh/authorized_keys
-ssh-copy-id -i /root/roger-skyline-1/files/id_rsa.pub $Username@10.11.45.33 -p 3333
+ssh-copy-id -i /root/roger-skyline-1/files/id_rsa.pub $Username@10.11.42.42 -p 3333
 
 /etc/init.d/ssh restart
 
@@ -238,10 +238,14 @@ sudo service apache2 restart
 
 echo "\n"
 echo "==================================================================\n"
-echo "            CLEANING"
+echo "            CLEANING &  desactivating unecessary services"
 echo "\n"
 
 apt-get remove -y git
+yes 'Y' | sudo apt-get remove --auto-remove git-man
 rm -rf /root/roger-skyline-1/
+sudo /etc/init.d/apparmor stop
+sudo systemctl stop apparmor.service
+sudo update-rc.d -f apparmor remove
 echo "Subject: Install done for $Username." | sudo sendmail -v manki@student.42.fr
 echo "Work done."

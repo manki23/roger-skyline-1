@@ -100,7 +100,7 @@ sudo deluser name sudo
 list sudo user : getent group sudo
 see all user : cat /etc/passwd ou (cut -d: -f1 /etc/passwd)
 
-service --status-all
+sudo service --status-all
 sudo service nomDuService status (sudo service dhcp status)
 
 Choisissez un netmask different que /30, demandez a l'évalué de
@@ -114,3 +114,32 @@ L'evalué choisira les IP. Si ce n'est pas réussi, ce test est échoué.
 
 lister les regles de parefeu (iptables):
 	sudo iptables -L
+
+apt-get install net-tools
+netstat -paunt ==> pour lister les ports ouverts
+port 80 = http
+port 443 = https
+port 587 = smtp email message submission
+port 25 = SMTP simple mail transfert protocol
+(https://fr.wikipedia.org/wiki/Liste_de_ports_logiciels)
+
+sudo service --status-all
+apache2 => serveur http
+cron => gestionnaire des taches
+dbus => D-Bus est actuellement un démon permettant la communication inter-processus
+kmod => outils pour gérer les modules du noyau Linux
+netfilter-persistent => necessaire pour rendre les modification d'iptables persistentes
+networking => gestion des connections reseau
+procps => Utilitaires pour le système de fichiers /proc
+rsyslog => permet de transférer les messages de journalisation sur un réseau IP
+sendmail => le service sendmail fonctionne en tant que relai SMTP afin d'envoyer les courriels plus rapidement
+udev => gestionnaire de peripheriques
+
+apt-get install mailutils
+vi /root/mbox
+
+verifier que le script d'update fonctionne (script_log.sh)
+supprimer le contenu de vi /var/log/update_script.log
+faire sudo reboot
+verifier dans vi /var/log/update_script.log que l'update a ete faite
+
