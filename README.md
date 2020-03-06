@@ -85,5 +85,5 @@ on the blue circle next to optical drive, and choose debian-10.1.0-amd64-netinst
 *__FIN CREATION VM__*
 
 ## Login
-login : root
-Password: root 
+- login : root
+- Password: root 
