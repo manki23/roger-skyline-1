@@ -22,7 +22,7 @@
 
 2 min wait => once finished, do not start the VM before changing the settings
 
-## Settings
+### Settings
 #### Generals:
 - __Shared Clipboard__: Bi-derectional
 - __Drag and drop__: Bi directional
@@ -35,7 +35,7 @@ on the blue circle next to optical drive, and choose debian-10.1.0-amd64-netinst
 - __Network->Adapter 1-> attached to__: Bridge Adapter
 - __Shared Folder__: pour creer des dossier partagés entre la VM et ma session
 
-## VM installation 
+### VM installation 
 - __START__ the VM and click on ```Install```
 - __Select a language__: French
 - __Situation Geographique__: France
@@ -84,7 +84,81 @@ on the blue circle next to optical drive, and choose debian-10.1.0-amd64-netinst
 - __Fin d'installation du systeme__
 
 *__FIN CREATION VM__*
+***
 
-## Login
+## Paramètrer la VM
+
+#### Login
 - __login__: ```root```
-- __Password__: ```root``` 
+- __Password__: ```root```
+
+#### Installer git, Télécharger les scripts & lancer l'installation
+```apt-get install git```
+
+```cd ; git clone https://github.com/manki23/roger-skyline-1.git ; cd roger-skyline-1```
+
+```sh install.sh```
+
+### __NB__ :
+- dans le fichier *__enp0s3__* on choisis l'addresse ip __10.11.32.32__
+    - __10__ correspond à l'école
+    - __11__ correspond à l'__e1__ (mettre __12__ pour l'__e2__, __13__ pour l'__e3__)
+    - *les deux derniers nombres sont libre de choix*
+- dans __/scripts/script_crontab.sh__ changer *manki@student.42.fr* par votre addresse mail, ne pas mettre une addresse ___gmail___ sinon le mail sera bloqué.
+- idem dans ___install.sh___
+***
+
+## Commandes Utiles
+- ```sudo fdisk -l``` => debian disk infos pour vérifier la taille des partitions  
+- ```sudo vim /etc/sudoers``` : pour forcer la configuration les sudo users  
+- ```sudo vim /etc/network/interfaces``` => to configure a static IP address.  
+- ```ip addr``` pour remplacer ```ifconfig```
+- ```vi``` pour remplacer ```vim```  
+- ```sudo service sshd restart``` => à faire à chaque fois qu'on modifie sshd_config, pour prendre les changement en compte  
+- ```apt-get update``` & ```apt-get -y upgrade```  
+- ```apt list --installed > tmp ; vi tmp``` ou ```grep " install " /var/log/dpkg.log > tmp ; vi tmp``` pour verifier les packets installés  
+```
+sudo adduser name
+sudo adduser name sudo
+sudo deluser name sudo
+```  
+- lister les sudo users : ```getent group sudo```  
+- see all user : ```cat /etc/passwd``` ou (```cut -d: -f1 /etc/passwd```)  
+- ```sudo service --status-all``` : voir le status des services installés  
+- ```sudo service nomDuService status``` (```sudo service dhcp status```) => pour vérifier le status d'un service en particulier  
+- lister les regles de parefeu (iptables): ```sudo iptables -L```  
+- lister les ports ouverts :  
+  - ```apt-get install net-tools```  
+  - ```netstat -paunt``` ==> pour lister les ports ouverts  
+  
+__NB__ : Ce à quoi correspond les numéros de port :  
+    port 80 = http  
+    port 443 = https  
+    port 587 = smtp email message submission  
+    port 25 = SMTP simple mail transfert protocol  
+    (https://fr.wikipedia.org/wiki/Liste_de_ports_logiciels)  
+```sudo service --status-all```  
+
+__NB__ : Ce à quoi sert chaque service :  
+```
+apache2 => serveur http
+cron => gestionnaire des taches
+dbus => D-Bus est actuellement un démon permettant la communication inter-processus
+kmod => outils pour gérer les modules du noyau Linux
+netfilter-persistent => necessaire pour rendre les modification d'iptables persistentes
+networking => gestion des connections reseau
+procps => Utilitaires pour le système de fichiers /proc
+rsyslog => permet de transférer les messages de journalisation sur un réseau IP
+sendmail => le service sendmail fonctionne en tant que relai SMTP afin d'envoyer les courriels plus rapidement
+udev => gestionnaire de peripheriques
+```  
+
+___verifier que le script d'update fonctionne (script_log.sh)___  
+supprimer le contenu de ```vi /var/log/update_script.log```  
+faire ```sudo reboot```  
+verifier dans ```vi /var/log/update_script.log``` que l'update a ete faite  
+
+___verifier le script de modification :___  
+modifier le timestamp dans ```/etc/crontab``` et vérifier que le mail a bien été envoyé au temps indiqué  
+
+***
