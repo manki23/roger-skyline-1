@@ -23,10 +23,10 @@
 2 min wait => once finished, do not start the VM before changing the settings
 
 ## Settings
-#### generals:
+#### Generals:
 - __Shared Clipboard__: Bi-derectional
 - __Drag and drop__: Bi directional
-####System:
+#### System:
 - __System->Floppy->__ uncheck
 - __Processor__: 4CPU
 - __Storage__ => in Storage Devices click on empty, then in Attributes, click
@@ -41,7 +41,7 @@ on the blue circle next to optical drive, and choose debian-10.1.0-amd64-netinst
 - __Situation Geographique__: France
 - __clavier__: Etats-Unis
 - __Nom de machine__: Roger
-- __Domaine__: <empty>
+- __Domaine__: ```<empty>```
 
 #### Creer les utilisateurs et choisir les mot de passe :
 - mdp root : root
@@ -50,40 +50,41 @@ on the blue circle next to optical drive, and choose debian-10.1.0-amd64-netinst
 - mdp user : manki
 
 #### Changer la taille des disques
-- __Partitionnement assiste->manuel__:
+- __Partitionnement assisté->manuel__:
   - click on __SCSI3(0,0,0)(sda)...__
   - __faut-il creer une nouvelle table des partitions sur ce disque ?__ ```oui```
   - click on __pri/log 8.6 GB Espace Libre__
-    - creer une nouvelle partition
-      - 4.5GB,
-      - Primaire,
-      - emplacement: Debut,
-      - utiliser comme: systeme de fichiers ext2,
-      - point de montage /,
-      - fin du paramettrage de cette partition
-  - click on pri/log 4.0 GB Espace Libre
-    - creer une nouvelle partition
-      - 4.1GB,
-      - Logique,
-      - utiliser comme: espace d'echange swap,
-      - fin du paramettrage de cette partition
-  - Terminer le Partitionnement et appliquer les changements
-- Faut-il appliquer les changement sur les disques => oui
+    - __creer une nouvelle partition__:
+      - ```4.5GB```,
+      - ```Primaire```,
+      - __Emplacement__: ```Debut```,
+      - __Utiliser comme__: ```systeme de fichiers ext2```,
+      - __Point de montage__: ```/```,
+      - __Fin du paramettrage de cette partition__
+  - click on __pri/log 4.0 GB Espace Libre__
+    - __creer une nouvelle partition__:
+      - ```4.1GB```,
+      - ```Logique```,
+      - __Utiliser comme__: ```espace d'echange swap```,
+      - __Fin du paramettrage de cette partition__
+  - __Terminer le Partitionnement et appliquer les changements__
+- __Faut-il appliquer les changement sur les disques__ => ```oui```
 
-- Analyser un autre cd -> non
-- France
-- Debian archive mirror: ftp.fr.debian.org
-- mandataire http : <leave empty>
-- Participer a l'etude, non
+- __Analyser un autre cd__ -> ```non```
+- ```France```
+- __Debian archive mirror__: ```ftp.fr.debian.org```
+- __mandataire http__: ```<leave empty>```
+- __Participer a l'etude__: ```non```
 
 #### Selection des logiciels :
-- serveur ssh
-- utilitaires usuels du systeme
-- Installer GRUB : oui, dans /dev/sta...
-- fin d'installation du systeme
+- __serveur ssh__
+- __utilitaires usuels du systeme__
+#### Pour finir :
+- __Installer GRUB__ : oui, dans ```/dev/sta...```
+- __Fin d'installation du systeme__
 
 *__FIN CREATION VM__*
 
 ## Login
-- login : root
-- Password: root 
+- __login__: ```root```
+- __Password__: ```root``` 
